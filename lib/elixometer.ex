@@ -258,7 +258,7 @@ defmodule Elixometer do
     monitor = name_to_exometer(:histograms, name)
 
     register_metric_once(monitor) do
-      :exometer.new(monitor, :histogram, [time_span: :timer.seconds(aggregate_seconds)])
+      :exometer.ensure(monitor, :histogram, [time_span: :timer.seconds(aggregate_seconds)])
     end
 
     :exometer.update(monitor, delta)
@@ -272,7 +272,7 @@ defmodule Elixometer do
   def update_spiral(name, delta, opts \\ [time_span: :timer.seconds(60), slot_period: 1000]) do
     monitor = name_to_exometer(:spirals, name)
     register_metric_once(monitor) do
-      :exometer.new(monitor, :spiral,  opts)
+      :exometer.ensure(monitor, :spiral,  opts)
     end
 
     :exometer.update(monitor, delta)
@@ -289,7 +289,7 @@ defmodule Elixometer do
     monitor = name_to_exometer(:counters, name)
 
     register_metric_once(monitor) do
-      :exometer.new(monitor, :counter, [])
+      :exometer.ensure(monitor, :counter, [])
 
       if is_nil secs do
         add_counter(monitor, secs)
@@ -320,7 +320,7 @@ defmodule Elixometer do
     monitor = name_to_exometer(:gauges, name)
 
     register_metric_once(monitor) do
-      :exometer.new(monitor, :gauge, [])
+      :exometer.ensure(monitor, :gauge, [])
     end
 
     :exometer.update(monitor, value)
@@ -338,7 +338,7 @@ defmodule Elixometer do
       monitor_name = name_to_exometer(:timers, unquote(name))
 
       register_metric_once(monitor_name) do
-        :exometer.new(monitor_name, :histogram, [])
+        :exometer.ensure(monitor_name, :histogram, [])
       end
 
       {elapsed_us, rv} = :timer.tc(fn -> unquote(block) end)

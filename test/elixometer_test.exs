@@ -251,4 +251,16 @@ defmodule ElixometerTest do
     assert {:error, :not_found} == get_metric_value("elixometer.test.bad.bad")
   end
 
+  test "updating an externally created metric" do
+    :exometer.new([:elixometer, :test, :gauges, :external_metric], :gauge)
+    update_gauge "external_metric", 100
+  end
+
+  test "updating an already subscrbed externally created metric" do
+    metric_name = [:elixometer, :test, :guages, :external_metric2]
+    :exometer.new(metric_name, :gauge)
+    :exometer_report.subscribe(Reporter, metric_name, [:value], 200)
+    update_gauge "external_metric", 100
+  end
+
 end
